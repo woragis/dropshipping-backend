@@ -18,7 +18,10 @@ const getProducts = async (req, res) => {
 }
 
 const createProduct = async (req, res) => {
-  const { title, price, description } = req.body
+  console.log('Callidng create product function')
+  const { title, description } = req.body
+  const price = Number(req.body.price)
+  console.log(req.body)
   try {
     const newProduct = new Product({ title, price, description })
     await newProduct.save()
@@ -29,4 +32,31 @@ const createProduct = async (req, res) => {
   }
 }
 
-module.exports = { getProducts, createProduct }
+const updateProduct = async (req, res) => {
+  const { _id, title, description } = req.body
+  const price = Number(req.body.price)
+  try {
+    const updatedProduct = Product.updateOne(
+      { _id },
+      { title, price, description }
+    )
+    await updatedProduct.save()
+    return res.status(200).json(updatedProduct)
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ message: 'Server error' })
+  }
+}
+
+const deleteProduct = async (req, res) => {
+  const { _id } = req.body
+  try {
+    await Product.deleteOne({ _id })
+    return res.status(200).json({ message: 'Deleted product: ' + _id })
+  } catch (err) {
+    console.error(err)
+    return res.status(500).json({ message: 'Server error' })
+  }
+}
+
+module.exports = { getProducts, createProduct, updateProduct, deleteProduct }

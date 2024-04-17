@@ -3,6 +3,7 @@ require('dotenv').config({ path: path.join(__dirname, 'config', '.env') })
 const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
+const cors = require('cors')
 
 // mongoose
 const mongoUri =
@@ -18,6 +19,16 @@ mongoose
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT'],
+    allowHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 200,
+  })
+)
 
 const logger = require('./middlewares/logger')
 app.use(logger)

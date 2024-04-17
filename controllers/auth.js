@@ -5,7 +5,7 @@ const login = async (req, res) => {
   const { email, password } = req.body
   try {
     const user = await User.findOne({ email })
-    if (!user || user.isValidPassword(password)) {
+    if (!user || user.password != password) {
       return res.status(401).json({ message: 'Invalid email or password' })
     }
     const token = jwt.generateToken({ sub: user._id })
