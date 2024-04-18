@@ -4,6 +4,10 @@ const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const logger = require('./middlewares/logger')
+const bodyTest = require('./routes/tests')
+const auth = require('./routes/auth')
+const products = require('./routes/products')
 
 // mongoose
 const mongoUri =
@@ -17,9 +21,6 @@ mongoose
     console.error('MongoDB connection error:', err)
   })
 
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-
 app.use(
   cors({
     origin: 'http://localhost:3000',
@@ -30,13 +31,12 @@ app.use(
   })
 )
 
-const logger = require('./middlewares/logger')
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+
 app.use(logger)
-
-const auth = require('./routes/auth')
+app.use('/', bodyTest)
 app.use('/auth', auth)
-
-const products = require('./routes/products')
 app.use('/products', products)
 
 module.exports = app
