@@ -7,7 +7,7 @@ const {
 } = require('../controllers/products')
 const { authenticateJwt } = require('../middlewares/auth')
 
-router.route('/').get(getProducts)
+router.route('/').post(getProducts)
 router.route('/new').post(authenticateJwt, createProduct)
 router
   .route('/update')

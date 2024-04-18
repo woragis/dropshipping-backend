@@ -20,7 +20,6 @@ const getProducts = async (req, res) => {
 const createProduct = async (req, res) => {
   console.log('Callidng create product function')
   const { title, price, description } = req.body
-  console.log(req.body)
   try {
     const newProduct = new Product({ title, price, description })
     await newProduct.save()
@@ -32,8 +31,7 @@ const createProduct = async (req, res) => {
 }
 
 const updateProduct = async (req, res) => {
-  const { _id, title, description } = req.body
-  const price = Number(req.body.price)
+  const { _id, title, price, description } = req.body
   try {
     const updatedProduct = Product.updateOne(
       { _id },
