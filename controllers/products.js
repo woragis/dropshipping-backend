@@ -19,8 +19,7 @@ const getProducts = async (req, res) => {
 
 const createProduct = async (req, res) => {
   console.log('Callidng create product function')
-  const { title, description } = req.body
-  const price = Number(req.body.price)
+  const { title, price, description } = req.body
   console.log(req.body)
   try {
     const newProduct = new Product({ title, price, description })
