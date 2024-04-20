@@ -3,8 +3,7 @@ const User = require('../models/user')
 const { genSalt, getRounds, hash, compare } = require('bcrypt')
 
 const encryptPassword = async (password) => {
-  const rounds = await getRounds('ass')
-  const salt = await genSalt(rounds)
+  const salt = await genSalt(13)
   const hashedPassword = await hash(password, salt)
   return hashedPassword
 }
@@ -58,8 +57,9 @@ const register = async (req, res) => {
           'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
       })
     }
-    const encryptedPassword = encryptPassword(password)
-    const newUser = new User({ email, encryptedPassword })
+    const encryptedPassword = await encryptPassword(password)
+
+    const newUser = new User({ email: email, password: encryptedPassword })
     await newUser.save()
 
     const token = generateToken({ sub: newUser._id })
