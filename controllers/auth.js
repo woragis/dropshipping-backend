@@ -14,13 +14,16 @@ const decryptPassword = async (originalPassword, encryptedPassword) => {
     originalPassword,
     encryptPassword,
     (err, same) => {
-      if (same) {
-        return true
-      } else {
-        return false
-      }
+      if (same) return true
+      else return false
     }
   )
+}
+
+const isValidPassword = async (password) => {
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+  return passwordRegex.test(password)
 }
 
 const login = async (req, res) => {
@@ -48,6 +51,12 @@ const register = async (req, res) => {
     const existingUser = await User.findOne({ email })
     if (existingUser) {
       return res.status(400).json({ message: 'Email already registered' })
+    }
+    if (!isValidPassword(password)) {
+      return res.status(400).json({
+        message:
+          'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+      })
     }
     const encryptedPassword = encryptPassword(password)
     const newUser = new User({ email, encryptedPassword })
