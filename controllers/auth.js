@@ -1,6 +1,7 @@
 const { generateToken, verifyToken } = require('../jwt')
 const User = require('../models/user')
 const { genSalt, getRounds, hash, compare } = require('bcrypt')
+const { transporter } = require('./emails')
 
 const encryptPassword = async (password) => {
   const salt = await genSalt(13)
@@ -23,6 +24,25 @@ const isValidPassword = async (password) => {
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
   return passwordRegex.test(password)
+}
+
+const emailOptions = {
+  from: 'jezreel.veloso@gmail.com',
+  to: 'jezreelgamer1@gmail.com',
+  subject: 'Account confirmation',
+  text: 'hi bitch',
+  html: '<strong>Sit</strong><em>hi</em>',
+}
+
+const confirmEmail = async () => {
+  try {
+    await transporter.send(emailOptions, (err, info) => {
+      console.log(info)
+    })
+  } catch (err) {
+    console.log('error sending confirmation email')
+    console.log(err)
+  }
 }
 
 const login = async (req, res) => {
@@ -63,6 +83,7 @@ const register = async (req, res) => {
     await newUser.save()
 
     const token = generateToken({ sub: newUser._id })
+    await confirmEmail()
     return res.status(201).json({ token })
   } catch (err) {
     console.error(err)
