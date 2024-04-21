@@ -8,6 +8,7 @@ const logger = require('./middlewares/logger')
 const bodyTest = require('./routes/tests')
 const auth = require('./routes/auth')
 const products = require('./routes/products')
+const profile = require('./routes/profile')
 
 // mongoose
 const mongoUri =
@@ -38,5 +39,6 @@ app.use(logger)
 app.use('/', bodyTest)
 app.use('/auth', auth)
 app.use('/products', products)
+app.use('/profile', profile)
 
 module.exports = app

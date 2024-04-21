@@ -9,17 +9,6 @@ const encryptPassword = async (password) => {
   return hashedPassword
 }
 
-const decryptPassword = async (originalPassword, encryptedPassword) => {
-  const equal = await compare(
-    originalPassword,
-    encryptPassword,
-    (err, same) => {
-      if (same) return true
-      else return false
-    }
-  )
-}
-
 const isValidPassword = async (password) => {
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
@@ -52,11 +41,14 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: 'Invalid email' })
     }
-    const rightPassword = decryptPassword(user.password, password)
+    console.log('user exists')
+    const rightPassword = await compare(password, user.password)
+    console.log('password tested')
     if (!rightPassword) {
       return res.status(401).json({ message: 'Invalid email or password' })
     }
-    const token = generateToken({ sub: user._id })
+    console.log('password was right')
+    const token = generateToken({ _id: user._id })
     return res.json({ token })
   } catch (err) {
     console.error(err)
@@ -82,8 +74,8 @@ const register = async (req, res) => {
     const newUser = new User({ email: email, password: encryptedPassword })
     await newUser.save()
 
-    const token = generateToken({ sub: newUser._id })
-    await confirmEmail()
+    const token = generateToken({ _id: newUser._id })
+    // const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
     return res.status(201).json({ token })
   } catch (err) {
     console.error(err)

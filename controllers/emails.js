@@ -1,16 +1,16 @@
 const nodemailer = require('nodemailer')
 
-// const transporter = nodemailer.createTransport({
-//  host: 'jezreel.veloso@gmail.com',
-//  port: 587,
-//  secure: false,
-//  auth: {
-//    user: 'jezreel.veloso@gmail.com',
-//    pass: 'jezreel2000',
-//  },
-//})
+const transporter = nodemailer.createTransport({
+  host: 'jezreel.veloso@gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: 'jezreel.veloso@gmail.com',
+    pass: 'jezreel2000',
+  },
+})
 
-// module.exports = transporter
+module.exports = transporter
 
 //const emailOptions = {
 // from: 'jezreelgamer2@gmail.com',
@@ -22,7 +22,7 @@ const nodemailer = require('nodemailer')
 //transporter.sendMail(emailOptions)
 
 // Create a transporter object using SMTP transport
-let transporter = nodemailer.createTransport({
+let transport = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'jezreel.veloso@gmail.com',
@@ -40,10 +40,10 @@ let mailOptions = {
 }
 
 // Send email
-transporter.sendMail(mailOptions, function (error, info) {
-  if (error) {
-    console.error('Error occurred:', error)
-  } else {
-    console.log('Email sent:', info.response)
-  }
-})
+// transport.sendMail(mailOptions, function (error, info) {
+//  if (error) {
+//    console.error('Error occurred:', error)
+//  } else {
+//    console.log('Email sent:', info.response)
+//  }
+//})
