@@ -12,7 +12,7 @@ const jwtOptions = {
 passport.use(
   new JwtStrategy(jwtOptions, async (payload, done) => {
     try {
-      const user = await User.findById(payload.sub)
+      const user = await User.findById(payload._id)
       if (!user) {
         return done(null, false)
       }
@@ -30,20 +30,20 @@ const authenticateJwt = async (req, res, next) => {
     req.headers.authorization && req.headers.authorization.split(' ')[1]
 
   if (!token) {
-    console.log('Authentication unauthorized')
+    // console.log('Authentication unauthorized')
     return res.status(401).json({ message: 'unauthorized' })
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    const user = await User.findById(decoded.sub)
+    const user = await User.findById(decoded._id)
 
     if (!user) {
-      console.log('Authentication unauthorized')
+      // console.log('Authentication unauthorized')
       return res.status(401).json({ message: 'unauthorized' })
     }
     req.user = user
-    console.log('Authentication Authorized')
+    // console.log('Authentication Authorized')
     next()
   } catch (err) {
     console.error(err)

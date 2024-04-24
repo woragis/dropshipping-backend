@@ -35,11 +35,15 @@ const confirmEmail = async () => {
 }
 
 const login = async (req, res) => {
+  console.log('login function initiated')
   const { email, password } = req.body
   try {
+    console.log('going to find user')
     const user = await User.findOne({ email })
+    console.log('finding user')
     if (!user) {
       return res.status(401).json({ message: 'Invalid email' })
+      console.log('didnt find user')
     }
     console.log('user exists')
     const rightPassword = await compare(password, user.password)
@@ -57,12 +61,17 @@ const login = async (req, res) => {
 }
 
 const register = async (req, res) => {
+  console.log('register function initiated')
   const { email, password } = req.body
   try {
+    console.log('testing if user already exists')
     const existingUser = await User.findOne({ email })
     if (existingUser) {
+      console.log('user already exists')
       return res.status(400).json({ message: 'Email already registered' })
     }
+    console.log('user didnt exist')
+    console.log('testing password')
     if (!isValidPassword(password)) {
       return res.status(400).json({
         message:
@@ -70,9 +79,11 @@ const register = async (req, res) => {
       })
     }
     const encryptedPassword = await encryptPassword(password)
+    console.log('encrypting password')
 
     const newUser = new User({ email: email, password: encryptedPassword })
     await newUser.save()
+    console.log('user saved')
 
     const token = generateToken({ _id: newUser._id })
     // const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
