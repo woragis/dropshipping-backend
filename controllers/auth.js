@@ -36,7 +36,7 @@ const confirmEmail = async () => {
 
 const login = async (req, res) => {
   console.log('login function initiated')
-  const { email, password, admin } = req.body
+  const { email, password } = req.body
   try {
     console.log('going to find user')
     const user = await User.findOne({ email })
@@ -45,14 +45,18 @@ const login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email' })
       console.log('didnt find user')
     }
-    console.log('user exists')
+    console.log('User Exists')
     const rightPassword = await compare(password, user.password)
-    console.log('password tested')
+    console.log('Password Tested')
     if (!rightPassword) {
+      console.log('Password Wrong')
       return res.status(401).json({ message: 'Invalid email or password' })
     }
-    console.log('password was right')
-    const token = generateToken({ _id: user._id, admin: user.admin })
+    console.log('Password Right')
+    const token = generateToken({
+      _id: user._id,
+      admin: user.role === 'user' ? false : true,
+    })
     return res.json({ token })
   } catch (err) {
     console.error(err)
@@ -70,7 +74,7 @@ const register = async (req, res) => {
       console.log('user already exists')
       return res.status(400).json({ message: 'Email already registered' })
     }
-    console.log('user didnt exist')
+    console.log('User Not Found')
     console.log('testing password')
     if (!isValidPassword(password)) {
       return res.status(400).json({
@@ -81,11 +85,18 @@ const register = async (req, res) => {
     const encryptedPassword = await encryptPassword(password)
     console.log('encrypting password')
 
-    const newUser = new User({ email: email, password: encryptedPassword })
+    const newUser = new User({
+      email: email,
+      password: encryptedPassword,
+      role: 'admin',
+    })
     await newUser.save()
     console.log('user saved')
 
-    const token = generateToken({ _id: newUser._id, admin: newUser.admin })
+    const token = generateToken({
+      _id: newUser._id,
+      admin: newUser.role === 'user' ? false : true,
+    })
     // const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
     return res.status(201).json({ token })
   } catch (err) {

@@ -17,8 +17,24 @@ const getProducts = async (req, res) => {
   }
 }
 
+const getProduct = async (req, res) => {
+  const { _id } = req.body
+  try {
+    const product = await Product.findById(_id)
+    if (!product) {
+      return res
+        .status(404)
+        .json({ message: 'Did not find product with id: ', _id })
+    }
+    console.log('product: ', product)
+    res.status(200).json(product)
+  } catch (err) {
+    console.log('Error getting product: ' + _id + '\n', err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
+
 const createProduct = async (req, res) => {
-  console.log('Callidng create product function')
   const { title, price, description } = req.body
   try {
     const newProduct = new Product({ title, price, description })
@@ -56,4 +72,10 @@ const deleteProduct = async (req, res) => {
   }
 }
 
-module.exports = { getProducts, createProduct, updateProduct, deleteProduct }
+module.exports = {
+  getProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+}

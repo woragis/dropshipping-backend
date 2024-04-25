@@ -9,10 +9,10 @@ const {
 
 router
   .route('/')
-  .get(getCartlist)
-  .post(addCartlistItem)
-  .put(updateCartlistItem)
-  .patch(updateCartlistItem)
-  .delete(deleteCartlistItem)
+  .get(authenticateJwt, getCartlist)
+  .post(authenticateJwt, addCartlistItem)
+  .put(authenticateJwt, updateCartlistItem)
+  .patch(authenticateJwt, updateCartlistItem)
+  .delete(authenticateJwt, deleteCartlistItem)
 
 module.exports = router
