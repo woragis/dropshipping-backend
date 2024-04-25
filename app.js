@@ -9,6 +9,8 @@ const bodyTest = require('./routes/tests')
 const auth = require('./routes/auth')
 const products = require('./routes/products')
 const profile = require('./routes/profile')
+const wishlist = require('./routes/wishlist')
+const cart = require('./routes/cart')
 
 // mongoose
 const mongoUri =
@@ -40,5 +42,7 @@ app.use('/', bodyTest)
 app.use('/auth', auth)
 app.use('/products', products)
 app.use('/profile', profile)
+app.use('/wishlist', wishlist)
+app.use('/cart', cart)
 
 module.exports = app

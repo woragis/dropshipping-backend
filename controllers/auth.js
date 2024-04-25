@@ -36,7 +36,7 @@ const confirmEmail = async () => {
 
 const login = async (req, res) => {
   console.log('login function initiated')
-  const { email, password } = req.body
+  const { email, password, admin } = req.body
   try {
     console.log('going to find user')
     const user = await User.findOne({ email })
@@ -52,7 +52,7 @@ const login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' })
     }
     console.log('password was right')
-    const token = generateToken({ _id: user._id })
+    const token = generateToken({ _id: user._id, admin: user.admin })
     return res.json({ token })
   } catch (err) {
     console.error(err)
@@ -85,7 +85,7 @@ const register = async (req, res) => {
     await newUser.save()
     console.log('user saved')
 
-    const token = generateToken({ _id: newUser._id })
+    const token = generateToken({ _id: newUser._id, admin: newUser.admin })
     // const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
     return res.status(201).json({ token })
   } catch (err) {

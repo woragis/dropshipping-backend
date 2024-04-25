@@ -36,13 +36,15 @@ const authenticateJwt = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    const user = await User.findById(decoded._id)
+    const userId = await User.findById(decoded._id)
+    const admin = decoded.admin
 
     if (!user) {
       // console.log('Authentication unauthorized')
       return res.status(401).json({ message: 'unauthorized' })
     }
-    req.user = user
+    req.user = userId
+    req.admin = admin
     // console.log('Authentication Authorized')
     next()
   } catch (err) {
