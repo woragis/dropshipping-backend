@@ -57,7 +57,7 @@ const login = async (req, res) => {
       _id: user._id,
       admin: user.role === 'user' ? false : true,
     })
-    return res.json({ token })
+    return res.json({ token, role: user.role })
   } catch (err) {
     console.error(err)
     return res.status(500).json({ message: 'Server error' })

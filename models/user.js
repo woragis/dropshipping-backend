@@ -26,9 +26,9 @@ const itemSchema = new mongoose.Schema({
 })
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: false },
-  email: { type: String, required: true },
-  password: { type: String, required: true },
+  username: { type: String, unique: true, required: false },
+  email: { type: String, unique: true, required: true },
+  password: { type: String, unique: false, required: true },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
   purchaseHistory: [purchaseSchema],
   visitHistory: [productSchema],
