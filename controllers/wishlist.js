@@ -4,7 +4,7 @@ const Product = require('../models/products')
 const getWishlistProducts = async (req, res) => {
   const userId = req._id
   try {
-    let user = await req.user.populate('cart.product')
+    let user = await req.user.populate('wishlist')
     console.log('User Wishlist: ', user.wishlist)
     res.status(200).json(user.wishlist)
   } catch (err) {
@@ -18,7 +18,7 @@ const addWishlistProduct = async (req, res) => {
   try {
     let user = req.user
     console.log('User exists?: ', user)
-    if (user.wishlist.some((item) => item.product.equals(_id))) {
+    if (user.wishlist.some((item) => item.equals(_id))) {
       return res.status(400).json({ message: 'Product ALREADY in wishlist' })
     }
     const product = await Product.findById(_id)
