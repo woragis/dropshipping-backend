@@ -6,7 +6,7 @@ const getWishlistProducts = async (req, res) => {
   try {
     let user = await req.user.populate('cart.product')
     console.log('User Wishlist: ', user.wishlist)
-    res.status(200).json(user.cart)
+    res.status(200).json(user.wishlist)
   } catch (err) {
     console.error('Error getting user wishlist: ', err)
   }
@@ -23,7 +23,7 @@ const addWishlistProduct = async (req, res) => {
     }
     const product = await Product.findById(_id)
     console.log('Product exists?: ', product)
-    user.wishlist.push({ product: _id })
+    user.wishlist.push(_id)
     await user.save()
     console.log('User wishlist: ', user.wishlist)
     res.status(201).json(user.wishlist)

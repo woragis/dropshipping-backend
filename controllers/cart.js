@@ -12,17 +12,15 @@ const getCartlist = async (req, res) => {
 }
 
 const addCartlistItem = async (req, res) => {
-  const { productId, quantity } = req.body
+  const { _id, quantity } = req.body
   const userId = req._id
   try {
     let user = await User.findById(userId)
-    const existingProduct = user.cart.find((item) =>
-      item.product.equals(productId)
-    )
+    const existingProduct = user.cart.find((item) => item.product.equals(_id))
     if (existingProduct) {
       existingProduct.quantity += quantity || 1
     } else {
-      user.cart.push({ product: productId, quantity: quantity || 1 })
+      user.cart.push({ product: _id, quantity: quantity || 1 })
     }
     await user.save()
     console.log('User cart: ', user.cart)
