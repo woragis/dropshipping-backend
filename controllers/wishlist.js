@@ -33,26 +33,6 @@ const addWishlistProduct = async (req, res) => {
   }
 }
 
-const updateWishlistProduct = async (req, res) => {
-  const { productId, quantity } = req.body
-  const userId = req._id
-  try {
-    let user = await User.findById(userId)
-    const itemIndex = user.wishlist.findIndex((item) =>
-      item.product.equals(productId)
-    )
-    if (itemIndex === -1) {
-      return res.status(404).json({ message: 'Product not found in wishlist' })
-    }
-    user.wishlist[itemIndex].quantity = req.body.quantity
-    await user.save()
-    res.status(200).json(user.wishlist[itemIndex])
-  } catch (err) {
-    console.error('Error updating product in user wishlist: ', err)
-    res.status(500).json({ message: 'Server error' })
-  }
-}
-
 const deleteWishlistProduct = async (req, res) => {
   const { productId } = req.body
   const userId = req._id
@@ -76,6 +56,5 @@ const deleteWishlistProduct = async (req, res) => {
 module.exports = {
   getWishlistProducts,
   addWishlistProduct,
-  updateWishlistProduct,
   deleteWishlistProduct,
 }
