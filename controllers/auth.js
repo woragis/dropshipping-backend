@@ -99,7 +99,9 @@ const register = async (req, res) => {
       admin: newUser.role === 'user' ? false : true,
     })
     // const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' })
-    return res.status(201).json({ token })
+    return res
+      .status(201)
+      .json({ token, username: newUser.username, admin: newUser.role })
   } catch (err) {
     console.error(err)
     return res.status(500).json({ message: 'Server error' })
