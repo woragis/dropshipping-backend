@@ -57,7 +57,7 @@ const login = async (req, res) => {
       _id: user._id,
       admin: user.role === 'user' ? false : true,
     })
-    return res.json({ token, role: user.role })
+    return res.json({ token, username: user.username, role: user.role })
   } catch (err) {
     console.error(err)
     return res.status(500).json({ message: 'Server error' })
@@ -66,7 +66,7 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   console.log('register function initiated')
-  const { email, password } = req.body
+  const { username, email, password } = req.body
   try {
     console.log('testing if user already exists')
     const existingUser = await User.findOne({ email })
@@ -86,6 +86,7 @@ const register = async (req, res) => {
     console.log('encrypting password')
 
     const newUser = new User({
+      username: username,
       email: email,
       password: encryptedPassword,
       role: 'admin',
